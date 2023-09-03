@@ -6,19 +6,20 @@ on:
       - '.github/workflows/sync.yml'
     branches:
       - main
-
+      
 jobs:
   mirror:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Check out destination repository
+      - name: Checkout Source Repository
         uses: actions/checkout@v2
-        with:
-          repository: asishrj91/Test2  # Change this to your username and destination repository name
 
-      - name: Push changes from source to destination
-        uses: AEnterprise/github-action-for-mirroring@main
-        with:
-          source-repository: asishrj91/test1  # Change this to your username and source repository name
-          source-token: ${{ secrets.newpattoken }}  # Use the secret created earlier
+      - name: Push to Destination Repository
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git remote add destination https://github.com/asishrj91/Test2.git
+          git push destination --mirror
+        env:
+          PAT_GITHUB: ${{ secrets.newpattoken }}

@@ -17,8 +17,6 @@ jobs:
 
       - name: Push to Destination Repository
         run: |
-          git config user.name "asishrj91"
-          git config user.email "asishrj91@gmail.com"
           git clone --bare https://github.com/asishrj91/test1.git
           cd test1.git
           git push --mirror https://$GH_TOKEN@github.com/asishrj91/Test2.git

@@ -36,7 +36,7 @@ jobs:
           files_modified=false
           while IFS= read -r file; do
             echo $file
-            dest="asishrj91/$file"
+            dest="Test2/$file"
             echo $dest
             mkdir -p "$(dirname "$dest")"
             

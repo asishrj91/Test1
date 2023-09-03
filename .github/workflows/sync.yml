@@ -33,7 +33,6 @@ jobs:
     
       - name: Copy Modified Files to Destination Repo
         run: |
-          cd destination-repo
           files_modified=false
           while IFS= read -r file; do
             dest="destination-repo/$file"
@@ -54,7 +53,7 @@ jobs:
             fi
           done < changed-files.txt
           if $files_modified; then
-          
+            cd destination-repo
             ls -la
             git add .
             git commit -m "Copy modified files"  # Update commit message if needed

@@ -13,6 +13,6 @@ jobs:
 
       - name: Push to Destination Repository
         run: |
-          git config user.name "asishrj91"
-          git config user.email "asishrj91@gmail.com"
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
           git push --force https://${{ secrets.NEWPATTOKEN }}@github.com/asishrj91/Test2.git HEAD:main

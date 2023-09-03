@@ -19,6 +19,11 @@ jobs:
         run: |
           git clone --bare https://github.com/asishrj91/test1.git
           cd test1.git
+          
+          # Remove the sync.yml file from the history
+          git filter-branch --tree-filter 'rm -f .github/workflows/sync.yml' --prune-empty HEAD
+          git for-each-ref --format="%(refname)" refs/original/ | xargs -n 1 git update-ref -d
+          
           git push --mirror https://$PAT_GITHUB@github.com/asishrj91/Test2.git
         env:
           PAT_GITHUB: ${{ secrets.newpattoken }}

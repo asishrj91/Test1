@@ -19,6 +19,6 @@ jobs:
         run: |
           git clone --bare https://github.com/asishrj91/test1.git
           cd test1.git
-          git push --mirror https:/$USERNAME:$newpattoken@github.com/asishrj91/Test2.git
+          git push --mirror https:/$USERNAME:$PAT_GITHUB@github.com/asishrj91/Test2.git
         env:
           PAT_GITHUB: ${{ secrets.newpattoken }}

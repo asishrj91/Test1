@@ -37,7 +37,7 @@ jobs:
             status=$(echo "$line" | cut -f1)
             file=$(echo "$line" | cut -f2)
             if [ "$status" != "D" ]; then
-              mkdir -p "Test2/$(dirname "$file")"
+              mkdir -p "destination-repo/Test2/$(dirname "$file")"
               cp "$file" "destination-repo/Test2/$file"
               echo $file
               echo $status

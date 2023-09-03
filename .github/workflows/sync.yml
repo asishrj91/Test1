@@ -1,19 +1,29 @@
+name: Sync Repositories
+
 on:
   push:
     branches:
-      - main  # Change this to the branch you want to trigger the sync on
+      - main  # Change this to your source branch (e.g., main, master, etc.)
 
 jobs:
   sync:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Source Repository
-        uses: actions/checkout@v2
+    - name: Checkout source repository
+      uses: actions/checkout@v2
+      with:
+        repository: asishrj91/Test1  # Change to your source repository URL
 
-      - name: Push to Destination Repository
-        run: |
-          git config user.name "GitHub Actions"
-          git config user.email "actions@github.com"
-          echo "18"
-          git push --force https://${{ secrets.NEWPATTOKEN }}@github.com/asishrj91/Test2.git HEAD:main
+    - name: Push to destination repository
+      env:
+        DESTINATION_REPO_TOKEN: ${{ secrets.NEWPATTOKEN }}
+      run: |
+        git config user.email "actions@github.com"
+        git config user.name "GitHub Actions"
+        git remote add destination https://github.com/asishrj91/Test2.git  # Change to your destination repository URL
+        git push destination main  # Change to your destination branch (e.g., main, master, etc.) - keep it consistent with your previous setup
+        echo "Pushed changes to destination repository"
+
+    - name: Complete
+      run: echo "Sync complete"

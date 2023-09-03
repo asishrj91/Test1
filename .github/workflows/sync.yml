@@ -35,10 +35,8 @@ jobs:
         run: |
           files_modified=false
           while IFS= read -r file; do
-            echo $destination-repo
             echo $file
-            
-            dest="destination-repo/$file"
+            dest="asishrj91/$file"
             echo $dest
             mkdir -p "$(dirname "$dest")"
             

@@ -33,6 +33,7 @@ jobs:
     
       - name: Copy Modified Files to Destination Repo
         run: |
+          cd destination-repo
           files_modified=false
           while IFS= read -r file; do
             dest="destination-repo/$file"
@@ -52,12 +53,13 @@ jobs:
               fi
             fi
           done < changed-files.txt
-          cd destination-repo
-          touch one.txt
-          ls -la
-          git add .
-          git commit -m "Copy modified files"  # Update commit message if needed
-          git push origin main
+          if $files_modified; then
+          
+            ls -la
+            git add .
+            git commit -m "Copy modified files"  # Update commit message if needed
+            git push origin main
+          fi
         working-directory: .  # Modify the working directory as needed
         
       - name: List Files in Test2 Repo

@@ -33,32 +33,21 @@ jobs:
     
       - name: Copy Modified Files to Destination Repo
         run: |
-          files_modified=false
-          while IFS= read -r file; do
-            dest="destination-repo/$file"
-            mkdir -p "$(dirname "$dest")"
-            cp "$file" "$dest"
-            if [ -d "$file" ]; then
-              cp -r "$file" "$dest"  # Use "cp -r" to copy directories recursively
-              files_modified=true
-            elif [ -f "$file" ]; then
-              if [ -d "$(dirname "$dest")" ]; then
-                cp "$file" "$dest"
-                files_modified=true
-              else
-                mkdir -p "$(dirname "$dest")"
-                cp "$file" "$dest"
-                files_modified=true
-              fi
+          while IFS= read -r line; do
+            status=$(echo "$line" | cut -f1)
+            file=$(echo "$line" | cut -f2)
+            if [ "$status" != "D" ]; then
+              mkdir -p "Test2/$(dirname "$file")"
+              cp "$file" "Test2/$file"
             fi
           done < changed-files.txt
-          if $files_modified; then
-            cd destination-repo
-            ls -la
-            git add .
-            git commit -m "Copy modified files"  # Update commit message if needed
-            git push origin main
-          fi
+
+          cd destination-repo
+          ls -la
+          git add .
+          git commit -m "Copy modified files"  # Update commit message if needed
+          git push origin main
+
         working-directory: .  # Modify the working directory as needed
         
       - name: List Files in Test2 Repo

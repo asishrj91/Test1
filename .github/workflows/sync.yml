@@ -1,6 +1,8 @@
 name: Move Modified Files
 on:
   push:
+    paths-ignore:
+      - '.github/workflows/sync.yml'
     branches:
       - main
 jobs:
@@ -56,3 +58,5 @@ jobs:
         run: |
           cd destination-repo
           ls -la
+paths-ignore:
+  - '.github/workflows/my_workflow.yml'

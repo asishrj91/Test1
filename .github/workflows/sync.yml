@@ -17,8 +17,8 @@ jobs:
 
       - name: Push to Destination Repository
         run: |
-          git config user.name "GitHub Actions"
-          git config user.email "actions@github.com"
+          git config user.name "asishrj91"
+          git config user.email "asishrj91@gmail.com"
           git remote add destination https://$USERNAME:$PAT_GITHUB@github.com/asishrj91/Test2.git
           git push destination --mirror
         env:

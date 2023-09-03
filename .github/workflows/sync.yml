@@ -39,24 +39,23 @@ jobs:
             status=$(echo "$line" | cut -f1)
             file=$(echo "$line" | cut -f2)
             if [ "$status" != "D" ]; then
-              mkdir -p "destination-repo/Test2/$(dirname "$file")"
-              cp "$file" "destination-repo/Test2/$file"
+              mkdir -p "destination-repo/$(dirname "$file")"
+              cp "$file" "destination-repo/$file"
               echo $file
               echo $status
+              files_modified=true
             fi
           done < changed-files.txt
-
-          cd destination-repo
-          ls -la
-          git add .
-          git commit -m "Copy modified files"  # Update commit message if needed
-          git push origin main
-
+          if $files_modified; then
+            cd destination-repo
+            ls -la
+            git add .
+            git commit -m "Copy modified files"  # Update commit message if needed
+            git push origin main
+          fi
         working-directory: .  # Modify the working directory as needed
         
       - name: List Files in Test2 Repo
         run: |
           cd destination-repo
           ls -la
-paths-ignore:
-  - '.github/workflows/my_workflow.yml'

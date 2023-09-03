@@ -39,6 +39,8 @@ jobs:
             if [ "$status" != "D" ]; then
               mkdir -p "Test2/$(dirname "$file")"
               cp "$file" "Test2/$file"
+              echo $file
+              echo $status
             fi
           done < changed-files.txt
 

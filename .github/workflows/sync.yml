@@ -52,13 +52,12 @@ jobs:
               fi
             fi
           done < changed-files.txt
-          if $files_modified; then
-            cd destination-repo
-            ls -la
-            git add .
-            git commit -m "Copy modified files"  # Update commit message if needed
-            git push origin main
-          fi
+          cd destination-repo
+          touch one.txt
+          ls -la
+          git add .
+          git commit -m "Copy modified files"  # Update commit message if needed
+          git push origin main
         working-directory: .  # Modify the working directory as needed
         
       - name: List Files in Test2 Repo

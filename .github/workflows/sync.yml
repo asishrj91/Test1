@@ -36,8 +36,9 @@ jobs:
           files_modified=false
           while IFS= read -r file; do
             echo $file
-            echo $dest
+            
             dest="destination-repo/$file"
+            echo $dest
             mkdir -p "$(dirname "$dest")"
             
             if [ -d "$file" ]; then

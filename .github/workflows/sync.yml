@@ -35,11 +35,9 @@ jobs:
         run: |
           files_modified=false
           while IFS= read -r file; do
-            echo $file
-            dest="Test2/$file"
-            echo $dest
+            dest="destination-repo/$file"
             mkdir -p "$(dirname "$dest")"
-            
+            cp "$file" "$dest"
             if [ -d "$file" ]; then
               cp -r "$file" "$dest"  # Use "cp -r" to copy directories recursively
               files_modified=true

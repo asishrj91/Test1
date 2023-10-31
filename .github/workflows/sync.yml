@@ -15,13 +15,13 @@ jobs:
 
     - name: Create ZIP
       run: |
-        mkdir -p artifacts
-        zip -r artifacts/First_Folder/Second_Folder.zip Test1/First_Folder/Second_Folder
+        mkdir -p $GITHUB_WORKSPACE/artifacts
+        zip -r $GITHUB_WORKSPACE/artifacts/First_Folder/Second_Folder.zip Test1/First_Folder/Second_Folder
       working-directory: ${{ github.workspace }}
 
-    - name: Save ZIP to Artifacts
+    - name: Archive artifacts
       uses: actions/upload-artifact@v2
       with:
         name: my-zip-artifact
-        path: artifacts/First_Folder/Second_Folder.zip
+        path: ${{ github.workspace }}/artifacts
 

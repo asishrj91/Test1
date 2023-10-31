@@ -1,25 +1,26 @@
-name: Create Artifacts
+name: Create Artifact
 
 on:
   push:
     branches:
-      - main  # Change this to your main branch name
+      - main  # Change this to the branch you want to trigger the workflow
 
 jobs:
-  create-artifacts:
+  build:
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Create Artifacts
+    - name: Create Artifact Directory
       run: |
         mkdir -p artifacts/Second_Folder
         cp Test1/First_Folder/Second_Folder/Text_doc.txt artifacts/Second_Folder/
+      working-directory: ${{ github.workspace }}
 
-    - name: Upload Artifacts
+    - name: Archive Artifact
       uses: actions/upload-artifact@v2
       with:
-        name: my-artifacts
-        path: ./artifacts
+        name: my-artifact
+        path: artifacts

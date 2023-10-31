@@ -21,8 +21,8 @@ jobs:
       - name: Create ZIP archive
         run: |
           mkdir -p artifacts
-          cd ${{ github.workspace }}/Test1/First_Folder/Second_Folder
-          zip -r ${{ github.workspace }}/artifacts/first_second.zip Text_doc.txt
+          cd Test1/First_Folder/Second_Folder
+          zip -r Test1/artifacts/first_second.zip Text_doc.txt
         working-directory: ${{ github.workspace }}
 
       - name: Upload ZIP to artifacts

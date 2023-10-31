@@ -18,16 +18,9 @@ jobs:
       with:
         node-version: '14'
 
-    - name: Install zip utility
-      run: |
-        sudo apt-get update
-        sudo apt-get install zip -y
-      shell: bash
-
     - name: Create ZIP
       run: |
-        mkdir -p $GITHUB_WORKSPACE/artifacts
-        cd Test1/First_Folder/Second_Folder
+        mkdir -p $GITHUB_WORKSPACE/artifacts/First_Folder/Second_Folder
         zip -r $GITHUB_WORKSPACE/artifacts/First_Folder/Second_Folder.zip .
       working-directory: ${{ github.workspace }}
 

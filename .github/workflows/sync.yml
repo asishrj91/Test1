@@ -13,10 +13,22 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+
+    - name: Install zip utility
+      run: |
+        sudo apt-get update
+        sudo apt-get install zip -y
+      shell: bash
+
     - name: Create ZIP
       run: |
         mkdir -p $GITHUB_WORKSPACE/artifacts
-        zip -r $GITHUB_WORKSPACE/artifacts/First_Folder/Second_Folder.zip Test1/First_Folder/Second_Folder
+        cd Test1/First_Folder/Second_Folder
+        zip -r $GITHUB_WORKSPACE/artifacts/First_Folder/Second_Folder.zip .
       working-directory: ${{ github.workspace }}
 
     - name: Archive artifacts
@@ -24,4 +36,3 @@ jobs:
       with:
         name: my-zip-artifact
         path: ${{ github.workspace }}/artifacts
-

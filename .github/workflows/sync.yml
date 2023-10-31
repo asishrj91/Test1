@@ -17,7 +17,7 @@ jobs:
     - name: Create Artifact Directory
       run: |
         mkdir -p $GITHUB_WORKSPACE/artifacts/Second_Folder
-        cp $GITHUB_WORKSPACE/Test1/First_Folder/Second_Folder/Text_doc.txt $GITHUB_WORKSPACE/artifacts/Second_Folder/
+        cp $GITHUB_WORKSPACE/First_Folder/Second_Folder/Text_doc.txt $GITHUB_WORKSPACE/artifacts/Second_Folder/
       working-directory: ${{ github.workspace }}
 
     - name: Archive Artifact

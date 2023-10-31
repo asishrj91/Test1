@@ -13,6 +13,11 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
+    - name: List Repository Contents
+      run: |
+        ls -R
+      working-directory: ${{ github.workspace }}
+
     - name: Create Artifact Directory
       run: |
         mkdir -p artifacts/Second_Folder

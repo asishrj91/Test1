@@ -12,7 +12,8 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
-
+    - name: Print the variable
+      run: echo "The value of workspace is ${{ github.workspace }}}"
     - name: Create Artifact Directory
       run: |
         mkdir -p $GITHUB_WORKSPACE/artifacts/Second_Folder

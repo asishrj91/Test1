@@ -1,31 +1,25 @@
-name: Create ZIP and Save to Artifacts
+name: Create Artifacts
 
 on:
   push:
     branches:
-      - main # Change this to your main branch name
+      - main  # Change this to your main branch name
 
 jobs:
-  build:
+  create-artifacts:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
+    - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: '14'
-
-    - name: Create ZIP
+    - name: Create Artifacts
       run: |
-        mkdir -p $GITHUB_WORKSPACE/artifacts/First_Folder/Second_Folder
-        zip -r $GITHUB_WORKSPACE/artifacts/First_Folder/Second_Folder.zip .
-      working-directory: ${{ github.workspace }}
+        mkdir -p artifacts/Second_Folder
+        cp Test1/First_Folder/Second_Folder/Text_doc.txt artifacts/Second_Folder/
 
-    - name: Archive artifacts
+    - name: Upload Artifacts
       uses: actions/upload-artifact@v2
       with:
-        name: my-zip-artifact
-        path: ${{ github.workspace }}/artifacts
+        name: my-artifacts
+        path: ./artifacts

@@ -1,32 +1,27 @@
-name: Zip and Upload Folder
+name: Create ZIP and Save to Artifacts
 
 on:
   push:
     branches:
-      - main  # Adjust this to your main branch name
+      - main # Change this to your main branch name
 
 jobs:
-  zip_and_upload:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+    - name: Checkout repository
+      uses: actions/checkout@v2
 
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.x
+    - name: Create ZIP
+      run: |
+        mkdir -p artifacts
+        zip -r artifacts/First_Folder/Second_Folder.zip Test1/First_Folder/Second_Folder
+      working-directory: ${{ github.workspace }}
 
-      - name: Create ZIP archive
-        run: |
-          mkdir -p artifacts
-          cd Test1/First_Folder/Second_Folder
-          zip -r Test1/artifacts/first_second.zip Text_doc.txt
-        working-directory: ${{ github.workspace }}
+    - name: Save ZIP to Artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: my-zip-artifact
+        path: artifacts/First_Folder/Second_Folder.zip
 
-      - name: Upload ZIP to artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: my-artifact
-          path: artifacts/first_second.zip

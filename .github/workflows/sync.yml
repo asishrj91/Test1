@@ -1,29 +1,27 @@
-name: Mirror Source Repository
+name: Zip and Upload Folder
 
 on:
   push:
-    paths-ignore:
-      - '.github/workflows/sync.yml'
     branches:
-      - main
-      
+      - main  # Adjust this to your main branch name
+
 jobs:
-  mirror:
+  zip_and_upload:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Source Repository
+      - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Push to Destination Repository
+      - name: Create ZIP archive
         run: |
-          git clone --bare https://github.com/asishrj91/test1.git
-          cd test1.git
-          
-          # Remove the sync.yml file from the history
-          git filter-branch --tree-filter 'rm -f .github/workflows/sync.yml' --prune-empty HEAD
-          git for-each-ref --format="%(refname)" refs/original/ | xargs -n 1 git update-ref -d
-          
-          git push --mirror https://$PAT_GITHUB@github.com/asishrj91/Test2.git
-        env:
-          PAT_GITHUB: ${{ secrets.newpattoken }}
+          mkdir -p artifacts
+          cd Test1
+          zip -r ../artifacts/first_second.zip First_Folder/Second_Folder
+        working-directory: ${{ github.workspace }}
+
+      - name: Upload ZIP to artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: my-artifact
+          path: artifacts/first_second.zip

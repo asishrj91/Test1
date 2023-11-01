@@ -24,20 +24,6 @@ jobs:
             # Use 'dirname' to extract the directory path, and then 'basename' to get the parent directory name
             folder=$(dirname "$file" | xargs basename)
             echo "$file was changed in folder '$folder'"
-		IFS='/' read -ra dirs <<< "$file"
-            
-            # Check if 'Second' is in the path and find the index
-            for i in "${!dirs[@]}"; do
-              if [[ ${dirs[i]} == "wo*" ]]; then
-                # Check if there is a preceding folder
-                if [ $i -gt 0 ]; then
-                  preceding_folder="${dirs[i-1]}"
-                  echo "Preceding folder of 'Second' is '$preceding_folder'"
-                else
-                  echo "No preceding folder for 'Second' (it is a top-level folder)"
-                fi
-                break
-              fi
-            done
+            preceding_folder=$(dirname $(dirname "$file"))
+            echo "preceding folder is '$preceding_folder'"
           done
-

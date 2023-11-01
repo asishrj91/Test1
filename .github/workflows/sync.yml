@@ -21,7 +21,6 @@ jobs:
         uses: tj-actions/changed-files@v40
 
       - name: List all changed files with preceding folder
-        id: list-changed-files
         run: |
           for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
             # Use 'dirname' to extract the directory path, and then 'basename' to get the parent directory name
@@ -32,28 +31,18 @@ jobs:
               echo "preceding folder path is '$preceding_folder_path'"
               preceding_folder=$(basename "$preceding_folder_path")
               echo "preceding folder is '$preceding_folder'"
-              echo "::set-output name=preceding_folder::$preceding_folder"  # Set an output variable
             fi
           done
-
-  create_artifact_directory:
-    needs: changed_files  # Make sure this job runs after the changed_files job
-    runs-on: ubuntu-latest
-    name: Create Artifact Directory
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Use the preceding_folder output from the previous job
+      - name: Create Artifact Directory
         run: |
-          mkdir -p $GITHUB_WORKSPACE/artifacts/${{ needs.changed_files.outputs.preceding_folder }}
-          echo ${{ needs.changed_files.outputs.preceding_folder }}
-          echo $GITHUB_WORKSPACE/artifacts/${{ needs.changed_files.outputs.preceding_folder }}
-          cp -r $GITHUB_WORKSPACE/${{ needs.changed_files.outputs.preceding_folder_path }}/* $GITHUB_WORKSPACE/artifacts/${{ needs.changed_files.outputs.preceding_folder }}
+          mkdir -p $GITHUB_WORKSPACE/artifacts/${{ steps.changed-files.outputs.preceding_folder }}
+          echo ${{ steps.changed-files.outputs.preceding_folder }}
+          echo $GITHUB_WORKSPACE/artifacts/$preceding_folder
+          cp -r $GITHUB_WORKSPACE/$preceding_folder_path/* $GITHUB_WORKSPACE/artifacts/$preceding_folder/
         working-directory: ${{ github.workspace }}
 
       - name: Archive Artifact
         uses: actions/upload-artifact@v2
         with:
-          name: my-artifact
-          path: ${{ github.workspace }}/artifacts
+         name: my-artifact
+         path: ${{ github.workspace }}/artifacts

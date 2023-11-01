@@ -49,8 +49,6 @@ jobs:
 
       - name: Archive Artifact
         uses: actions/upload-artifact@v2
-        env:
-           out_preceding_folder: ${{ steps.get_folder_names.outputs.out_preceding_folder }}
         with:
-         name: $out_preceding_folder
+         name: ${{ steps.get_folder_names.outputs.out_preceding_folder }}
          path: ${{ github.workspace }}/artifacts

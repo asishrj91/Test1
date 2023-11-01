@@ -33,6 +33,8 @@ jobs:
               echo "preceding folder is '$preceding_folder'"
             fi
           done
+      - name: Create Artifact Directory
+        run: |
           mkdir -p $GITHUB_WORKSPACE/artifacts/$preceding_folder
           echo $preceding_folder
           echo $GITHUB_WORKSPACE/artifacts/$preceding_folder
@@ -42,5 +44,5 @@ jobs:
       - name: Archive Artifact
         uses: actions/upload-artifact@v2
         with:
-         name: ${{ steps.changed-files.outputs.preceding_folder }}-artifact # Set the artifact name explicitly
+         name: my-artifact
          path: ${{ github.workspace }}/artifacts

@@ -31,7 +31,7 @@ jobs:
               echo "preceding folder path is '$preceding_folder_path'"
               preceding_folder=$(basename "$preceding_folder_path")
               echo "preceding folder is '$preceding_folder'"
-              echo "preceding_folder=$(basename "$preceding_folder_path")" >> $GITHUB_OUTPUT
+              echo "preceding_folder=$preceding_folder" >> $GITHUB_OUTPUT
             fi
           done
       - name: Create Artifact Directory

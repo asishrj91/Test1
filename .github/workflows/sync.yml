@@ -21,6 +21,7 @@ jobs:
         uses: tj-actions/changed-files@v40
 
       - name: List all changed files with preceding folder
+        id: get_folder_names
         run: |
           for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
             # Use 'dirname' to extract the directory path, and then 'basename' to get the parent directory name
@@ -37,8 +38,8 @@ jobs:
           done
       - name: Create Artifact Directory
         env:
-           out_preceding_folder: ${{ steps.changed-files.outputs.out_preceding_folder }}
-           out_preceding_folder_path: ${{ steps.changed-files.outputs.out_preceding_folder_path }}
+           out_preceding_folder: ${{ steps.get_folder_names.outputs.out_preceding_folder }}
+           out_preceding_folder_path: ${{ steps.get_folder_names.outputs.out_preceding_folder_path }}
         run: |
           mkdir -p $GITHUB_WORKSPACE/artifacts/$out_preceding_folder
           echo $out_preceding_folder

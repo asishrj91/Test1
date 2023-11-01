@@ -11,6 +11,8 @@ jobs:
   changed_files:
     runs-on: ubuntu-latest
     name: Test changed-files
+    env:
+      PRECEDING_FOLDER: ""
     steps:
       - uses: actions/checkout@v2
         with:
@@ -23,27 +25,25 @@ jobs:
       - name: List all changed files with preceding folder
         run: |
           for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
-            # Use 'dirname' to extract the directory path, and then 'basename' to get the parent directory name
             folder=$(dirname "$file" | xargs basename)
             echo "$file was changed in folder '$folder'"
             if [[ $folder == Se* ]]; then
               preceding_folder_path=$(dirname $(dirname "$file"))
               echo "preceding folder path is '$preceding_folder_path'"
-              preceding_folder=$(basename "$preceding_folder_path")
-              echo "preceding folder is '$preceding_folder'"
-              echo "preceding_folder=$preceding_folder" >> $GITHUB_OUTPUT
+              PRECEDING_FOLDER=$(basename "$preceding_folder_path")
+              echo "preceding folder is '$PRECEDING_FOLDER'"
             fi
           done
+
       - name: Create Artifact Directory
         run: |
-          mkdir -p $GITHUB_WORKSPACE/artifacts/${{ steps.changed-files.outputs.preceding_folder }}
-          echo "preceding folder is '$preceding_folder'"
-          echo $GITHUB_WORKSPACE/artifacts/$preceding_folder
-          cp -r $GITHUB_WORKSPACE/$preceding_folder_path/* $GITHUB_WORKSPACE/artifacts/$preceding_folder/
+          mkdir -p $GITHUB_WORKSPACE/artifacts/$PRECEDING_FOLDER
+          cp -r $GITHUB_WORKSPACE/$preceding_folder_path/* $GITHUB_WORKSPACE/artifacts/$PRECEDING_FOLDER/
         working-directory: ${{ github.workspace }}
 
       - name: Archive Artifact
         uses: actions/upload-artifact@v2
         with:
-         name: my-artifact
-         path: ${{ github.workspace }}/artifacts
+          name: my-artifact
+          path: ${{ github.workspace }}/artifacts
+

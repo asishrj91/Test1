@@ -27,7 +27,7 @@ jobs:
             if [[ $folder == Se* ]]; then
               preceding_folder_path=$(dirname $(dirname "$file"))
               echo "preceding folder path is '$preceding_folder_path'"
-              preceding_folder=$(dirname "preceding_folder_path" | xargs basename)
+              preceding_folder=$(basename "$preceding_folder_path")
               echo "preceding folder is '$preceding_folder'"
             fi
           done

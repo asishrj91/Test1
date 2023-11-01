@@ -42,5 +42,5 @@ jobs:
       - name: Archive Artifact
         uses: actions/upload-artifact@v2
         with:
-         name: $preceding_folder
-         path: ${{ github.workspace }}/artifacts
+         name: ${{ steps.changed-files.outputs.all_changed_files }}
+         path: ${{ github.workspace }}/artifacts/$preceding_folder

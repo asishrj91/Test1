@@ -24,7 +24,7 @@ jobs:
             # Use 'dirname' to extract the directory path, and then 'basename' to get the parent directory name
             folder=$(dirname "$file" | xargs basename)
             echo "$file was changed in folder '$folder'"
-            if [[ ${dirname "$file" == "wo*" ]]; then
+            if [[ $folder == "wo*" ]]; then
               preceding_folder=$(dirname $(dirname "$file"))
               echo "preceding folder is '$preceding_folder'"
             fi

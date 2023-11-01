@@ -1,3 +1,139 @@
+name: Create ZIP and Save to Artifacts
+
+on:
+  push:
+    branches:
+      - main # Change this to your main branch name
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+
+    - name: Create ZIP
+      run: |
+        mkdir -p $GITHUB_WORKSPACE/artifacts/First_Folder/Second_Folder
+        zip -r $GITHUB_WORKSPACE/artifacts/First_Folder/Second_Folder.zip .
+      working-directory: ${{ github.workspace }}
+
+    - name: Archive artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: my-zip-artifact
+        path: ${{ github.workspace }}/artifacts
+
+
+
+
+name: Create Artifact
+
+on:
+  push:
+    branches:
+      - main  # Change this to the branch you want to trigger the workflow
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: Print the variable
+      run: echo "The value of workspace is ${{ github.workspace }}}"
+    - name: Create Artifact Directory
+      run: |
+        mkdir -p $GITHUB_WORKSPACE/artifacts/Second_Folder
+        cp $GITHUB_WORKSPACE/First_Folder/Second_Folder/Text_doc.txt $GITHUB_WORKSPACE/artifacts/Second_Folder/
+      working-directory: ${{ github.workspace }}
+
+    - name: Archive Artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: my-artifact
+        path: ${{ github.workspace }}/artifacts
+
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  changed_files:
+    runs-on: ubuntu-latest
+    name: Test changed-files
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v40
+
+      - name: List all changed files with preceding folder
+        run: |
+          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
+            # Use 'dirname' to extract the directory path, and then 'basename' to get the parent directory name
+            folder=$(dirname "$file" | xargs basename)
+            echo "$file was changed in folder '$folder'"
+          done
+
+
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  changed_files:
+    runs-on: ubuntu-latest
+    name: Test changed-files
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v40
+
+      - name: List all changed files with preceding folder
+        run: |
+          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
+            # Use 'dirname' to extract the directory path, and then 'basename' to get the parent directory name
+            folder=$(dirname "$file" | xargs basename)
+            echo "$file was changed in folder '$folder'"
+		IFS='/' read -ra dirs <<< "$file"
+            
+            # Check if 'Second' is in the path and find the index
+            for i in "${!dirs[@]}"; do
+              if [[ ${dirs[i]} == "wo*" ]]; then
+                # Check if there is a preceding folder
+                if [ $i -gt 0 ]; then
+                  preceding_folder="${dirs[i-1]}"
+                  echo "Preceding folder of 'Second' is '$preceding_folder'"
+                else
+                  echo "No preceding folder for 'Second' (it is a top-level folder)"
+                fi
+                break
+              fi
+            done
+          done
+
+
 name: CI
 
 on:
@@ -11,8 +147,6 @@ jobs:
   changed_files:
     runs-on: ubuntu-latest
     name: Test changed-files
-    env:
-      PRECEDING_FOLDER: ""
     steps:
       - uses: actions/checkout@v2
         with:
@@ -25,25 +159,31 @@ jobs:
       - name: List all changed files with preceding folder
         run: |
           for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
+            # Use 'dirname' to extract the directory path, and then 'basename' to get the parent directory name
             folder=$(dirname "$file" | xargs basename)
             echo "$file was changed in folder '$folder'"
             if [[ $folder == Se* ]]; then
               preceding_folder_path=$(dirname $(dirname "$file"))
               echo "preceding folder path is '$preceding_folder_path'"
-              PRECEDING_FOLDER=$(basename "$preceding_folder_path")
-              echo "preceding folder is '$PRECEDING_FOLDER'"
+              preceding_folder=$(basename "$preceding_folder_path")
+              echo "preceding folder is '$preceding_folder'"
+              echo "out_preceding_folder=preceding_folder" >> "$GITHUB_OUTPUT"
+              echo "out_preceding_folder_path=preceding_folder_path" >> "$GITHUB_OUTPUT"
             fi
           done
-
       - name: Create Artifact Directory
+        env:
+           out_preceding_folder: ${{ steps.changed-files.outputs.out_preceding_folder }}
+           out_preceding_folder_path: ${{ steps.changed-files.outputs.out_preceding_folder_path }}
         run: |
-          mkdir -p $GITHUB_WORKSPACE/artifacts/$PRECEDING_FOLDER
-          cp -r $GITHUB_WORKSPACE/$PRECEDING_FOLDER/* $GITHUB_WORKSPACE/artifacts/$PRECEDING_FOLDER/
+          mkdir -p $GITHUB_WORKSPACE/artifacts/$preceding_folder
+          echo $preceding_folder
+          echo $GITHUB_WORKSPACE/artifacts/$preceding_folder
+          cp -r $GITHUB_WORKSPACE/$preceding_folder_path/* $GITHUB_WORKSPACE/artifacts/$preceding_folder/
         working-directory: ${{ github.workspace }}
 
       - name: Archive Artifact
         uses: actions/upload-artifact@v2
         with:
-          name: my-artifact
-          path: ${{ github.workspace }}/artifacts
-
+         name: my-artifact
+         path: ${{ github.workspace }}/artifacts

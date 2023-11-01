@@ -27,5 +27,7 @@ jobs:
             if [[ $folder == wo* ]]; then
               preceding_folder=$(dirname $(dirname "$file"))
               echo "preceding folder is '$preceding_folder'"
+              preceding_path="${preceding_folder}/$folder"
+              echo "preceding path is '$preceding_path'"
             fi
           done

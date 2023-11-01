@@ -42,5 +42,5 @@ jobs:
       - name: Archive Artifact
         uses: actions/upload-artifact@v2
         with:
-         name: ${{ steps.changed-files.outputs.preceding_folder }} # Use the value from preceding_folder
+         name: ${{ steps.changed-files.outputs.preceding_folder }}-artifact # Set the artifact name explicitly
          path: ${{ github.workspace }}/artifacts

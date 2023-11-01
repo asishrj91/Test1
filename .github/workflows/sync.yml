@@ -36,6 +36,7 @@ jobs:
       - name: Create Artifact Directory
         run: |
           mkdir -p $GITHUB_WORKSPACE/artifacts/$preceding_folder
+          echo $GITHUB_WORKSPACE/artifacts/$preceding_folder
           cp -r $GITHUB_WORKSPACE/$preceding_folder_path/* $GITHUB_WORKSPACE/artifacts/$preceding_folder/
         working-directory: ${{ github.workspace }}
 

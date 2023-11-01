@@ -33,8 +33,6 @@ jobs:
               echo "preceding folder is '$preceding_folder'"
             fi
           done
-      - name: Create Artifact Directory
-        run: |
           mkdir -p $GITHUB_WORKSPACE/artifacts/$preceding_folder
           echo $preceding_folder
           echo $GITHUB_WORKSPACE/artifacts/$preceding_folder

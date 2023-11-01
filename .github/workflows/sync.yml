@@ -25,7 +25,9 @@ jobs:
             folder=$(dirname "$file" | xargs basename)
             echo "$file was changed in folder '$folder'"
             if [[ $folder == Se* ]]; then
-              preceding_folder=$(dirname $(dirname "$file"))
+              preceding_folder_path=$(dirname $(dirname "$file"))
+              echo "preceding folder path is '$preceding_folder_path'"
+              preceding_folder=$(dirname "preceding_folder_path" | xargs basename)
               echo "preceding folder is '$preceding_folder'"
             fi
           done

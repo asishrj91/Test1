@@ -15,12 +15,18 @@ jobs:
 
       - name: Get list of changed files
         id: changed_files
-        run: echo "::set-output name=files::$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})"
+        run: |
+          FROM_COMMIT=${{ github.event.before }}
+          TO_COMMIT=${{ github.sha }}
+          CHANGED_FILES=$(git diff --name-only $FROM_COMMIT $TO_COMMIT)
+          echo "Changed Files: $CHANGED_FILES"
+          echo "CHANGED_FILES=$CHANGED_FILES" >> $GITHUB_ENV
 
       - name: Locate changes
         id: locate_changes
         run: |
-          for file in ${{ steps.changed_files.outputs.files }}; do
+          CHANGED_FILES=(${{ env.CHANGED_FILES }})
+          for file in "${CHANGED_FILES[@]}"; do
             # Process each changed file here
             # You can use 'grep' or any other tool to locate changes in the file
             # For example, to find specific text within the file:

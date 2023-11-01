@@ -18,10 +18,11 @@ jobs:
         id: changed-files
         uses: tj-actions/changed-files@v40
 
-      - name: List all changed files with preceding folders
+      - name: List all changed files with preceding folder
         run: |
           for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
-            # Use 'dirname' to extract the directory path
-            folder=$(dirname "$file")
+            # Use 'dirname' to extract the directory path, and then 'basename' to get the parent directory name
+            folder=$(dirname "$file" | xargs basename)
             echo "$file was changed in folder '$folder'"
           done
+

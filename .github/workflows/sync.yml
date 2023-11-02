@@ -26,7 +26,7 @@ jobs:
           if [[ $text =~ /([^/]+)/Se]]; then
           preceding_folder="${BASH_REMATCH[1]}"
           fi
-          f [[ $text =~ (.*)/$preceding_folder ]]; then
+          if [[ $text =~ (.*)/$preceding_folder ]]; then
           preceding_folder_path="${BASH_REMATCH[1]}"
           fi
           echo "preceding folder path is '$preceding_folder_path'"

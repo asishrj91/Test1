@@ -2,6 +2,8 @@ name: CI
 
 on:
   push:
+    paths-ignore:
+      - '.github/workflows/sync.yml'
     branches:
       - main
 
@@ -19,15 +21,34 @@ jobs:
         uses: tj-actions/changed-files@v40
 
       - name: List all changed files with preceding folder
+        id: get_folder_names
         run: |
           for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
             # Use 'dirname' to extract the directory path, and then 'basename' to get the parent directory name
             folder=$(dirname "$file" | xargs basename)
             echo "$file was changed in folder '$folder'"
             if [[ $folder == Se* ]]; then
-              preceding_folder=$(dirname $(dirname "$file"))
+              preceding_folder_path=$(dirname $(dirname "$file"))
+              echo "preceding folder path is '$preceding_folder_path'"
+              preceding_folder=$(basename "$preceding_folder_path")
               echo "preceding folder is '$preceding_folder'"
-              preceding_path="${preceding_folder}/$folder"
-              echo "preceding path is '$preceding_path'"
+              echo "out_preceding_folder=$preceding_folder" >> "$GITHUB_OUTPUT"
+              echo "out_preceding_folder_path=$preceding_folder_path" >> "$GITHUB_OUTPUT"
             fi
           done
+      - name: Create Artifact Directory
+        env:
+           out_preceding_folder: ${{ steps.get_folder_names.outputs.out_preceding_folder }}
+           out_preceding_folder_path: ${{ steps.get_folder_names.outputs.out_preceding_folder_path }}
+        run: |
+          mkdir -p $GITHUB_WORKSPACE/artifacts/$out_preceding_folder
+          echo $out_preceding_folder
+          echo $GITHUB_WORKSPACE/artifacts/$out_preceding_folder
+          cp -r $GITHUB_WORKSPACE/$out_preceding_folder_path/* $GITHUB_WORKSPACE/artifacts/$out_preceding_folder/
+        working-directory: ${{ github.workspace }}
+
+      - name: Archive Artifact
+        uses: actions/upload-artifact@v2
+        with:
+         name: ${{ steps.get_folder_names.outputs.out_preceding_folder }}
+         path: ${{ github.workspace }}/artifacts

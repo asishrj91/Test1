@@ -23,20 +23,17 @@ jobs:
       - name: List all changed files with preceding folder
         id: get_folder_names
         run: |
-          IFS=$'\n' # Set the Internal Field Separator to newline to properly handle file paths with spaces
-          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
-            # Use 'dirname' to extract the directory path, and then 'basename' to get the parent directory name
-            folder=$(dirname "$file" | xargs basename)
-            echo "$file was changed in folder '$folder'"
-            if [[ $folder == Se* ]]; then
-              preceding_folder_path=$(dirname "$(dirname "$file")")
-              echo "preceding folder path is '$preceding_folder_path'"
-              preceding_folder=$(basename "$preceding_folder_path")
-              echo "preceding folder is '$preceding_folder'"
-              echo "out_preceding_folder=$preceding_folder" >> "$GITHUB_OUTPUT"
-              echo "out_preceding_folder_path=$preceding_folder_path" >> "$GITHUB_OUTPUT"
-            fi
-          done
+          if [[ $text =~ /([^/]+)/Se ]]; then
+          preceding_folder="${BASH_REMATCH[1]}"
+          fi
+          f [[ $text =~ (.*)/$preceding_folder ]]; then
+          preceding_folder_path="${BASH_REMATCH[1]}"
+          fi
+          echo "preceding folder path is '$preceding_folder_path'"
+          echo "preceding folder is '$preceding_folder'"
+          echo "out_preceding_folder=$preceding_folder" >> "$GITHUB_OUTPUT"
+          echo "out_preceding_folder_path=$preceding_folder_path" >> "$GITHUB_OUTPUT"
+
       - name: Create Artifact Directory
         env:
           out_preceding_folder: ${{ steps.get_folder_names.outputs.out_preceding_folder }}

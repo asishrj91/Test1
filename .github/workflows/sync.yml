@@ -24,16 +24,16 @@ jobs:
         id: get_folder_names
         run: |
           if [[ ${{ steps.changed-files.outputs.all_changed_files }} =~ /([^/]+)/Se]]; then
-          preceding_folder="${BASH_REMATCH[1]}"
+            preceding_folder="${BASH_REMATCH[1]}"
           fi
           if [[ ${{ steps.changed-files.outputs.all_changed_files }} =~ (.*)/$preceding_folder ]]; then
-          preceding_folder_path="${BASH_REMATCH[1]}"
+            preceding_folder_path="${BASH_REMATCH[1]}"
           fi
           echo "preceding folder path is '$preceding_folder_path'"
           echo "preceding folder is '$preceding_folder'"
           echo "out_preceding_folder=$preceding_folder" >> "$GITHUB_OUTPUT"
           echo "out_preceding_folder_path=$preceding_folder_path" >> "$GITHUB_OUTPUT"
-
+        shell: bash
       - name: Create Artifact Directory
         env:
           out_preceding_folder: ${{ steps.get_folder_names.outputs.out_preceding_folder }}

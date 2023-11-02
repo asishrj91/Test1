@@ -23,6 +23,7 @@ jobs:
       - name: List all changed files with preceding folder
         id: get_folder_names
         run: |
+          IFS=$'\n' # Set the Internal Field Separator to newline to properly handle file paths with spaces
           for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
             # Use 'dirname' to extract the directory path, and then 'basename' to get the parent directory name
             folder=$(dirname "$file" | xargs basename)
@@ -38,17 +39,17 @@ jobs:
           done
       - name: Create Artifact Directory
         env:
-           out_preceding_folder: ${{ steps.get_folder_names.outputs.out_preceding_folder }}
-           out_preceding_folder_path: ${{ steps.get_folder_names.outputs.out_preceding_folder_path }}
+          out_preceding_folder: ${{ steps.get_folder_names.outputs.out_preceding_folder }}
+          out_preceding_folder_path: ${{ steps.get_folder_names.outputs.out_preceding_folder_path }}
         run: |
-          mkdir -p $GITHUB_WORKSPACE/artifacts/$out_preceding_folder
-          echo $out_preceding_folder
-          echo $GITHUB_WORKSPACE/artifacts/$out_preceding_folder
-          cp -r $GITHUB_WORKSPACE/$out_preceding_folder_path/* $GITHUB_WORKSPACE/artifacts/$out_preceding_folder/
+          mkdir -p "$GITHUB_WORKSPACE/artifacts/$out_preceding_folder"
+          echo "$out_preceding_folder"
+          echo "$GITHUB_WORKSPACE/artifacts/$out_preceding_folder"
+          cp -r "$GITHUB_WORKSPACE/$out_preceding_folder_path"/* "$GITHUB_WORKSPACE/artifacts/$out_preceding_folder/"
         working-directory: ${{ github.workspace }}
 
       - name: Archive Artifact
         uses: actions/upload-artifact@v2
         with:
-         name: ${{ steps.get_folder_names.outputs.out_preceding_folder }}
-         path: ${{ github.workspace }}/artifacts
+          name: ${{ steps.get_folder_names.outputs.out_preceding_folder }}
+          path: ${{ github.workspace }}/artifacts- this code is not working if there is space in the location directory (${{ steps.changed-files.outputs.all_changed_files }})

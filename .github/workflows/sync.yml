@@ -23,7 +23,7 @@ jobs:
       - name: List all changed files with preceding folder
         id: get_folder_names
         run: |
-          if [[ $text =~ /([^/]+)/Se ]]; then
+          if [[ $text =~ /([^/]+)/Se]]; then
           preceding_folder="${BASH_REMATCH[1]}"
           fi
           f [[ $text =~ (.*)/$preceding_folder ]]; then
